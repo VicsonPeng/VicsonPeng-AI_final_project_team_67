@@ -1,20 +1,39 @@
 import os
 
-def convert_all_3d_to_2d(root_dir):
-    for split in ["train", "test"]:
-        split_dir = os.path.join(root_dir, split)
-        for label in os.listdir(split_dir):
-            label_dir = os.path.join(split_dir, label)
-            if not os.path.isdir(label_dir):
+def convert_3d_to_2d_line(line):
+    vals = [v for v in line.strip().split(";") if v != ""]
+    if len(vals) != 63:
+        return None
+    xy = [v for i, v in enumerate(vals) if i % 3 != 2]
+    return " ".join(xy)
+
+def process_split(input_root, output_root):
+    for label in os.listdir(input_root):
+        in_label_dir = os.path.join(input_root, label)
+        if not os.path.isdir(in_label_dir):
+            continue
+
+        out_label_dir = os.path.join(output_root, label)
+        os.makedirs(out_label_dir, exist_ok=True)
+
+        for fn in os.listdir(in_label_dir):
+            if not fn.endswith(".txt") or "_2d" in fn:
                 continue
 
-            for filename in os.listdir(label_dir):
-                if filename.endswith(".txt"):
-                    input_path  = os.path.join(label_dir, filename)
-                    output_path = os.path.join(label_dir, filename)  # 可改成其他路徑避免覆蓋
+            in_path  = os.path.join(in_label_dir, fn)
+            out_path = os.path.join(out_label_dir, fn)
 
-                    convert_3d_to_2d(input_path, output_path)
-                    print(f"✔ 已轉換 {input_path}")
+            with open(in_path, "r") as rf, open(out_path, "w") as wf:
+                for line in rf:
+                    converted = convert_3d_to_2d_line(line)
+                    if converted is not None:
+                        wf.write(converted + "\n")
 
-# 呼叫
-convert_all_3d_to_2d("gestures")
+if __name__ == "__main__":
+    for folder in ["train", "test"]:
+        if os.path.isdir(folder):
+            dst = folder + "_2d"
+            os.makedirs(dst, exist_ok=True)
+            process_split(folder, dst)
+        else:
+            print(f"找不到資料夾：{folder}")  
