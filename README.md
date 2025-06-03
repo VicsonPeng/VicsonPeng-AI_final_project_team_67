@@ -23,6 +23,6 @@ python train.py --batch-size 512 --epochs 600 --dataset 1 --lr 0.001 | tee train
 
 ### **Testing**
 ```
-python test.py --model-path ibn_experiment/timestamp/model.pt --dataset 1
+python test.py --model-path model.pt --dataset 1
 ```
 note that model.pt can be found in ibn_experiments folder after training
