@@ -14,8 +14,8 @@ cd HTconvNet2D
 ```
 
 ### **Process datasets**  
-Run **video_to_gesture.py** to change the data captured by mediapipe claaified with video names to classified with gesture labels.
-If you need 2D data, run **3d_to_2d.py** to convert the 3D data to 2D.
+Run **video_to_gesture.py** to change the data captured by mediapipe claaified with video names to classified with gesture labels.  
+If you need 2D data, run **3d_to_2d.py** to convert the 3D data to 2D.  
 Use the preprocessing code in the **data processing** folder to process the data and put them in the data folder.
 
 ### **Training**  
